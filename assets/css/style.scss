@@ -3,23 +3,6 @@
 
 @import "{{ site.theme }}";
 
-body {
-  background-color: #f4f1fa !important;
-  color: #292538 !important;
-  font-family: Arial, sans-serif !important;
-}
-
-h1, h2, h3 {
-  color: #7547a8 !important;
-}
-
-a {
-  color: #8b4bc1 !important;
-}
-
-a:hover {
-  color: #50277c !important;
-}
 
 ul {
   line-height: 2 !important;
