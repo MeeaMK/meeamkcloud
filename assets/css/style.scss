@@ -1,0 +1,26 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+body {
+  background-color: #f4f1fa;
+  color: #292538;
+  font-family: Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: #7547a8;
+}
+
+a {
+  color: #8b4bc1;
+}
+
+a:hover {
+  color: #50277c;
+}
+
+ul {
+  line-height: 2;
+}
