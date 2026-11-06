@@ -37,10 +37,7 @@ function App() {
         </div>
 
         <div>
-          <h1>Koodinimi generaattori</h1>
-          <p>
-            Sinulla on koodinimi paikallisessa muistissa!
-          </p>
+          <h1>Koodinimen generointi</h1>
         </div>
 
         <button
