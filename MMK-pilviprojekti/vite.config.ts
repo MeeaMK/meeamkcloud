@@ -3,8 +3,9 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/meeamkcloud/MMK-pilviprojekti/',
+  base: '/meeamkcloud/MMK-pilviprojekti-dist/',
   build: {
-  outDir: '../MMK-pilviprojekti-dist',
-},
+    outDir: '../MMK-pilviprojekti-dist',
+    emptyOutDir: true,
+  },
 })
