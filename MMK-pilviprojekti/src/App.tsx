@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { onAuthStateChanged, type User } from 'firebase/auth'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
+import LoginForm from './LoginForm'
+import { auth, logout } from './authService'
 import './App.css'
 
 function generateCodename() {
@@ -16,14 +19,50 @@ function generateCodename() {
 }
 
 function App() {
-  const [codename, setCodename] = useState<string | null>(
-    localStorage.getItem('codename')
-  )
+  const [user, setUser] = useState<User | null>(null)
+  const [codename, setCodename] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
+  // Seurataan Firebase-kirjautumisen tilaa
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser)
+      setLoading(false)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  // Haetaan tai luodaan käyttäjän oma koodinimi
+  useEffect(() => {
+    if (user) {
+      const storageKey = `codename_${user.uid}`
+      let savedCodename = localStorage.getItem(storageKey)
+
+      if (!savedCodename) {
+        savedCodename = generateCodename()
+        localStorage.setItem(storageKey, savedCodename)
+      }
+
+      setCodename(savedCodename)
+    } else {
+      setCodename(null)
+    }
+  }, [user])
+
+  // Luodaan käyttäjälle uusi koodinimi
   function createCodename() {
+    if (!user) return
+
     const newCodename = generateCodename()
-    localStorage.setItem('codename', newCodename)
+    const storageKey = `codename_${user.uid}`
+
+    localStorage.setItem(storageKey, newCodename)
     setCodename(newCodename)
+  }
+
+  if (loading) {
+    return <p>Ladataan sovellusta...</p>
   }
 
   return (
@@ -35,23 +74,32 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
 
-        <div>
-          <h1>Koodinimen generointi</h1>
-        </div>
+        {user ? (
+          <>
+            <h1>Tervetuloa!</h1>
 
-        <button
-          type="button"
-          className="counter"
-          onClick={createCodename}
-        >
-          Luo uusi koodinimi!
-        </button>
+            <p>Olet kirjautunut sisään käyttäjänä:</p>
+            <p>{user.email}</p>
 
-        {codename && (
-          <div>
             <h2>Koodinimesi:</h2>
             <h1 className="codename">{codename}</h1>
-          </div>
+
+            <button
+              type="button"
+              className="counter"
+              onClick={createCodename}
+            >
+              Luo uusi koodinimi!
+            </button>
+
+            <div>
+              <button type="button" onClick={logout}>
+                Kirjaudu ulos
+              </button>
+            </div>
+          </>
+        ) : (
+          <LoginForm />
         )}
       </section>
     </>
