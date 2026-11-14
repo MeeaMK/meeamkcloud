@@ -1,12 +1,10 @@
-name: Deploy Week 3 Vite App
+
+name: Deploy GitHub Pages
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'MMK-pilviprojekti/**'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,6 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,18 +37,30 @@ jobs:
         working-directory: MMK-pilviprojekti
         run: npm run build
 
-      - name: Upload Pages artifact
+      - name: Build main website
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Add Week 3 Vite app
+        run: |
+          mkdir -p _site/MMK-pilviprojekti
+          cp -a MMK-pilviprojekti/dist/. _site/MMK-pilviprojekti/
+
+      - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
-          path: MMK-pilviprojekti/dist
+          path: ./_site
 
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
+
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
