@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/meeamkcloud/MMK-pilviprojekti/',
+  base: '/meeamkcloud/MMK-pilviprojekti/dist/',
   build: {
     rollupOptions: {
       input: {
