@@ -11,6 +11,7 @@ export default defineConfig({
         viikko3: 'viikko3.html',
         viikko4: 'viikko4.html',
         viikko5: 'viikko5.html',
+        viikko6: 'viikko6.html',
       },
     },
   },
